@@ -25,8 +25,9 @@ app.use(
 
 app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN;
-  const authToken = req.get('Authorization')
-  if (!authtoken || authToken.split(' ')[1] !== apiToken) {
+  const authToken = req.headers['authorization']
+  console.log(authToken);
+  if (!authToken || authToken.split(' ')[1] !== apiToken) {
     return res.status(401).json({error: "Unauthorized request"});
   }
   next()
@@ -79,7 +80,7 @@ app.post("/signup");
 // =====================================
 // we will want this protected so you have to be logged in to visit
 // we will use route middleware to verify this (the isLoggedIn function)
-app.get("/home", isLoggedIn, (req, res) => {
+app.get("/home", (req, res) => {
   let response = PURCHASES;
   if (req.query.userOne) {
     response = response.userOne;
@@ -101,14 +102,6 @@ app.get("/signout", function(req, res) {
   res.redirect("/signin");
 });
 
-// route middleware to make sure a user is logged in
-function isLoggedIn(req, res, next) {
-  // if user is authenticated in the session, carry on
-  if (req.isAuthenticated()) return next();
-
-  // if they aren't redirect them to the home page
-  res.redirect("/");
-}
 
 app.use(function errorHandler(error, req, res, next) {
   let response;
