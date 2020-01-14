@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
+    "start": "node src/app/app",
     "predeploy": "npm audit",
     "deploy": "git push heroku master"
   },
@@ -14,11 +14,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "cookieparser": "^0.1.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "helmet": "^3.21.2",
-    "morgan": "^1.9.1"
+    "knex": "^0.20.7",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.8.7",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pg": "^7.17.1",
+    "postgres": "^1.0.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
