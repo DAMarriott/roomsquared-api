@@ -1,0 +1,36 @@
+[
+  {  "userOne": [{
+        "purchaseID": 1,
+        "item": "Paper Towels",
+        "cost": "$15"
+    },
+    {
+        "purchaseID": 2,
+        "item": "Dish Soap",
+        "cost": "$8"
+    }]
+},
+
+  {  "userTwo": [{
+        "purchaseID": 1,
+        "item": "Paper Towels",
+        "cost": "$15"
+    },
+    {
+        "purchaseID": 2,
+        "item": "Dish Soap",
+        "cost": "$8"
+    }]},
+
+    {  "userThree": [{
+        "purchaseID": 1,
+        "item": "Paper Towels",
+        "cost": "$15"
+    },
+    {
+        "purchaseID": 2,
+        "item": "Dish Soap",
+        "cost": "$8"
+    }]}
+]
+

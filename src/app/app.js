@@ -5,6 +5,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const { NODE_ENV } = require("../config/config");
 const { CLIENT_ORIGIN } = require("../config/config");
+const PURCHASES = require('../seeds/purchaseSeed.json')
+
+console.log(process.env.API_TOKEN)
 
 const app = express();
 
@@ -17,6 +20,17 @@ app.use(
     origin: CLIENT_ORIGIN
   })
 );
+
+//* VALIDATION *//
+
+app.use(function validateBearerToken(req, res, next) {
+  const apiToken = process.env.API_TOKEN;
+  const authToken = req.get('Authorization')
+  if (!authtoken || authToken.split(' ')[1] !== apiToken) {
+    return res.status(401).json({error: "Unauthorized request"});
+  }
+  next()
+});
 
 //* ROUTES *//
 
@@ -66,9 +80,17 @@ app.post("/signup");
 // we will want this protected so you have to be logged in to visit
 // we will use route middleware to verify this (the isLoggedIn function)
 app.get("/home", isLoggedIn, (req, res) => {
-  res.render("home", {
-    user: req.user // get the user out of session and pass to template
-  });
+  let response = PURCHASES;
+  if (req.query.userOne) {
+    response = response.userOne;
+  }
+  if (req.query.userTwo) {
+    response = response.userTwo;
+  }
+  if (req.query.userThree) {
+    response = response.userThree
+  }
+  res.json(response)
 });
 
 // =====================================
