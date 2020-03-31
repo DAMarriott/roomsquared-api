@@ -1,26 +1,33 @@
-// app/models/user.js
-// load the things we need
-var mongoose = require("mongoose");
-var bcrypt = require("bcrypt-nodejs");
+const { CONNECTION_STRING } = require("../config/config");
 
-// define the schema for our user model
-var userSchema = mongoose.Schema({
-  local: {
-    username: String,
-    password: String
-  }
+var pg = require("knex")({
+  client: "pg",
+  connection: CONNECTION_STRING,
+  searchPath: ["public"]
 });
 
-// methods ======================
-// generating a hash
-userSchema.methods.generateHash = function(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
+async function createUser(username, password, groupId) {
+  await pg("users")
+    .insert({ username, password, groupId })
+    .returning("*");
+}
 
-// checking if password is valid
-userSchema.methods.validPassword = function(password) {
-  return bcrypt.compareSync(password, this.local.password);
-};
+async function checkUserSignIn(username) {
+  await pg("users").where({
+    username: username
+  });
+}
 
-// create the model for users and expose it to our app
-module.exports = mongoose.model("User", userSchema);
+async function selectHash(username) {
+  await pg("users")
+    .where({
+      username: username
+    })
+    .select("password");
+}
+
+module.exports = {
+  createUser,
+  checkUserSignIn,
+  selectHash
+};
