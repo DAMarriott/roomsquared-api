@@ -8,23 +8,25 @@ const PurchaseService = {
       .where("groupId", groupId);
   },
 
-  addPurchase(pg, newPurchase) {
+  insertPurchase(pg, newPurchase) {
     return pg
       .insert(newPurchase)
       .into("purchases")
       .returning("*")
       .then(([purchase]) => purchase)
-      .then(purchase => PurchaseService.getById(pg, purchase.groupId));
+      .then(purchase => PurchaseService.getAllById(pg, purchase.groupId));
   },
 
   deletePurchase(pg, id) {
-    return knex("shopping_list")
+    return pg
+      .from("purchases")
       .where({ id })
       .delete();
   },
 
   serializePurchase(purchase) {
     const { user } = purchase;
+
     return {
       id: purchase.id,
       item: xss(purchase.item),

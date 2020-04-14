@@ -1,12 +1,13 @@
 const bcrypt = require("bcryptjs");
 const xss = require("xss");
+const AuthService = require("../auth/auth-services");
 
 const UsersService = {
   hasUserWithUserName(pg, username) {
     return pg("users")
       .where({ username })
       .first()
-      .then(user => !!user);
+      .then((user) => !!user);
   },
   insertUser(pg, newUser) {
     return pg
@@ -16,8 +17,8 @@ const UsersService = {
       .then(([user]) => user);
   },
   validatePassword(password) {
-    if (password.length < 6) {
-      return "Password be longer than 8 characters";
+    if (password.length < 3) {
+      return "Password must be longer than 3 characters";
     }
     if (password.length > 72) {
       return "Password be less than 72 characters";
@@ -34,9 +35,20 @@ const UsersService = {
     return {
       id: user.id,
       full_name: xss(user.username),
-      groupId: xss(user.groupId)
+      groupId: xss(user.groupId),
     };
-  }
+  },
+  getUserFromToken(authHeader) {
+    const { id, iat, sub, groupId } = AuthService.decodeJwt(
+      authHeader.split(" ")[1]
+    );
+    return {
+      id,
+      iat,
+      username: sub,
+      groupId,
+    };
+  },
 };
 
 module.exports = UsersService;

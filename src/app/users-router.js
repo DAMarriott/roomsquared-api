@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path");
 const UsersService = require("./users-services");
+const AuthServices = require("../auth/auth-services");
+const bcrypt = require("bcryptjs");
 
 const usersRouter = express.Router();
 const jsonBodyParser = express.json();

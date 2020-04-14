@@ -9,6 +9,7 @@ const { NODE_ENV } = require("../config/config");
 const authRouter = require("./auth-router");
 const purchaseRouter = require("./purchase-router");
 const usersRouter = require("./users-router");
+const groupsRouter = require("./groups-router");
 
 const app = express();
 
@@ -47,6 +48,10 @@ app.use("/api/purchases", purchaseRouter);
 
 app.use("/api/users", usersRouter);
 
+app.use("/api/groups", groupsRouter);
+
+app.use("/api/auth/signin", authRouter);
+
 //Create new group
 
 // =====================================
@@ -54,34 +59,11 @@ app.use("/api/users", usersRouter);
 // =====================================
 // we will want this protected so you have to be logged in to visit
 // we will use route middleware to verify this (the isLoggedIn function)
-app.get("/purchases", (req, res) => {
-  let response = PURCHASES;
-  res.json(response);
-});
-
-app.post("/purchases", (req, res) => {
-  const { id, item, cost } = req.body;
-  const newItem = {
-    id,
-    item,
-    cost
-  };
-
-  PURCHASES[0].userOne.purchases.push(newItem);
-  res
-    .status(201)
-    .location(`http://localhost:8000/purchases/${id}`)
-    .json(PURCHASES);
-});
-
-app.delete("/purchases/:id", (req, res) => {
-  // ...
-});
 
 // =====================================
 // LOGOUT ==============================
 // =====================================
-app.get("/signout", function(req, res) {
+app.get("/api/signout", function (req, res) {
   req.logout();
   res.redirect("/signin");
 });
