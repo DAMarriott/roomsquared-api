@@ -10,16 +10,20 @@ const jsonBodyParser = express.json();
 
 purchaseRouter
   .route("/")
-  .get(
-    /*requireAuth, */ (req, res, next) => {
-      const { groupId } = req.body;
-      PurchaseService.getAllById(req.app.get("pg"), groupId).then(
+  .get(/*requireAuth, */ jsonBodyParser, async (req, res, next) => {
+    const { username, groupId } = UsersService.getUserFromToken(
+      req.header("authorization")
+    );
+
+    try {
+      const purchases = await PurchaseService.getAllById(req.app.get("pg"), groupId).then(
         (purchases) => {
           return res.status(201);
         }
       );
-    }
-  )
+    } catch (err) {
+      next(err);
+  })
   .post(/*requireAuth, */ jsonBodyParser, async (req, res, next) => {
     const { item, price } = req.body;
 
